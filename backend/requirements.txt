@@ -1,0 +1,9 @@
+django
+django-stubs
+djangorestframework
+djangorestframework-stubs
+mypy
+flake8
+django-cors-headers
+python-dotenv
+psycopg2
