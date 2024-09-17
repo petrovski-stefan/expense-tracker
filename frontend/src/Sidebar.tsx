@@ -3,9 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { CurrentLoggedInUser } from './CurrentLoggedInUser';
 
 const links = [
-  { path: '/', name: 'DASHBOARD' },
-  { path: '/transactions', name: 'TRANSACTIONS' },
-  { path: '/settings', name: 'SETTINGS' },
+  { path: '/', name: 'DASHBOARD', needsAuth: true },
+  { path: '/transactions', name: 'TRANSACTIONS', needsAuth: true },
+  { path: '/settings', name: 'SETTINGS', needsAuth: true },
+  { path: '/login', name: 'LOGIN', needsAuth: false },
+  { path: '/register', name: 'REGISTER', needsAuth: false },
 ];
 
 export const Sidebar = () => {
@@ -14,6 +16,9 @@ export const Sidebar = () => {
   const toggleMenu = () => {
     setIsOpen((oldValue) => !oldValue);
   };
+
+  const auth = true;
+
   return (
     <>
       <div
@@ -46,32 +51,34 @@ export const Sidebar = () => {
         <div className={'' + (isOpen ? ' absolute top-2 right-3 md:hidden ' : 'hidden')}>
           <button onClick={toggleMenu}>&#x2715;</button>
         </div>
-        {links.map((link) => {
-          return (
-            <div
-              key={link.name}
-              className="text-lg w-full text-center mb-6 md:mb-3"
-            >
+        {links
+          .filter((link) => link.needsAuth === auth)
+          .map((link) => {
+            return (
               <div
-                className={
-                  'w-3/4  mx-auto' +
-                  (location.pathname === link.path
-                    ? ' underline underline-offset-4 decoration-1 decoration-white'
-                    : '')
-                }
+                key={link.name}
+                className="text-lg w-full text-center mb-6 md:mb-3"
               >
-                <Link
-                  to={link.path}
-                  onClick={() => {
-                    if (isOpen) setIsOpen(false);
-                  }}
+                <div
+                  className={
+                    'w-3/4  mx-auto' +
+                    (location.pathname === link.path
+                      ? ' underline underline-offset-4 decoration-1 decoration-white'
+                      : '')
+                  }
                 >
-                  {link.name}
-                </Link>
+                  <Link
+                    to={link.path}
+                    onClick={() => {
+                      if (isOpen) setIsOpen(false);
+                    }}
+                  >
+                    {link.name}
+                  </Link>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </>
   );
