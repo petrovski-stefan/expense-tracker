@@ -1,3 +1,7 @@
+# type: ignore
 from django.contrib import admin
 
-# Register your models here.
+from .models import Category, Transaction
+
+admin.site.register(Transaction)
+admin.site.register(Category)

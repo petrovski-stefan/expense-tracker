@@ -1,9 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CurrentLoggedInUser } from './CurrentLoggedInUser';
 import { TransactionList } from './TransactionList';
 import { ChartsContainer } from './ChartsContainer';
+import useAuthContext from './auth-context/use-auth-context';
 
 export const Dashboard = () => {
+  const { authInfo } = useAuthContext();
+  const navigate = useNavigate();
+
+  if (authInfo.token === '') {
+    navigate('/login');
+  }
+
   return (
     <div className="h-full flex flex-col">
       <div className="hidden md:h-[10%] md:flex md:justify-between">

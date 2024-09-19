@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { CurrentLoggedInUser } from './CurrentLoggedInUser';
+import useAuthContext from './auth-context/use-auth-context';
 
 const links = [
   { path: '/', name: 'DASHBOARD', needsAuth: true },
@@ -13,11 +14,11 @@ const links = [
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { authInfo } = useAuthContext();
+
   const toggleMenu = () => {
     setIsOpen((oldValue) => !oldValue);
   };
-
-  const auth = true;
 
   return (
     <>
@@ -52,7 +53,7 @@ export const Sidebar = () => {
           <button onClick={toggleMenu}>&#x2715;</button>
         </div>
         {links
-          .filter((link) => link.needsAuth === auth)
+          .filter((link) => link.needsAuth === (authInfo.token !== ''))
           .map((link) => {
             return (
               <div
