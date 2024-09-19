@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CurrentLoggedInUser } from './CurrentLoggedInUser';
 import useAuthContext from './auth-context/use-auth-context';
 
@@ -14,10 +14,16 @@ const links = [
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { authInfo } = useAuthContext();
-
+  const { authInfo, logout } = useAuthContext();
+  const navigate = useNavigate();
   const toggleMenu = () => {
     setIsOpen((oldValue) => !oldValue);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsOpen(false);
+    navigate('/login');
   };
 
   return (
@@ -80,6 +86,13 @@ export const Sidebar = () => {
               </div>
             );
           })}
+        {authInfo.token !== '' && (
+          <div className="text-lg text-center">
+            <div>
+              <button onClick={handleLogout}>LOGOUT</button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
