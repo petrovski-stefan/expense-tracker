@@ -87,7 +87,7 @@ export const Sidebar = () => {
             );
           })}
         {authInfo.token !== '' && (
-          <div className="text-lg text-center">
+          <div className="mt-20 text-lg text-center">
             <div>
               <button onClick={handleLogout}>LOGOUT</button>
             </div>
