@@ -3,14 +3,17 @@ import { CurrentLoggedInUser } from './CurrentLoggedInUser';
 import { TransactionList } from './TransactionList';
 import { ChartsContainer } from './ChartsContainer';
 import useAuthContext from './auth-context/use-auth-context';
+import { useEffect } from 'react';
 
 export const Dashboard = () => {
   const { authInfo } = useAuthContext();
   const navigate = useNavigate();
 
-  if (authInfo.token === '') {
-    navigate('/login');
-  }
+  useEffect(() => {
+    if (authInfo.token === '') {
+      navigate('/login');
+    }
+  });
 
   return (
     <div className="h-full flex flex-col">
