@@ -43,6 +43,16 @@ export const Register = () => {
       setError('Passwords do not match. Try again.');
       return;
     }
+
+    if (
+      registerCredentials.username === '' ||
+      registerCredentials.password === '' ||
+      registerCredentials.confirmPassword === ''
+    ) {
+      setError('Please fill out all fields.');
+      return;
+    }
+
     setLoading(true);
     setError(undefined);
     try {
@@ -70,37 +80,39 @@ export const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-full">
-      {error && <h1>{error}</h1>}
-      {loading && <h1>Loading</h1>}
-      <form className="flex flex-col gap-4 p-3">
-        <div>Register</div>
-        <label>Username</label>
+    <div className="flex items-center justify-center h-3/4">
+      <form className="flex flex-col gap-4 p-3 w-3/5 sm:w-2/5 md:w-4/12">
+        {error && <h1>{error}</h1>}
+        {loading && <h1>Please wait...</h1>}
+        <label className="font-semibold">Username</label>
         <input
           type="text"
+          className="p-1 rounded-md border-2 border-indigo-700"
           onChange={(e) =>
             setRegisterCredentials({ ...registerCredentials, username: e.target.value })
           }
         />
 
-        <label>Password</label>
+        <label className="font-semibold">Password</label>
         <input
           type="password"
+          className="p-1 rounded-md border-2 border-indigo-700"
           onChange={(e) =>
             setRegisterCredentials({ ...registerCredentials, password: e.target.value })
           }
         />
 
-        <label>Confirm Password</label>
+        <label className="font-semibold">Confirm Password</label>
         <input
           type="password"
+          className="p-1 rounded-md border-2 border-indigo-700"
           onChange={(e) =>
             setRegisterCredentials({ ...registerCredentials, confirmPassword: e.target.value })
           }
         />
 
         <button
-          className="px-2 py-1 text-white bg-indigo-700 rounded-full"
+          className="px-2 py-1 text-white bg-indigo-700 rounded-full w-5/6 mx-auto"
           type="submit"
           onClick={handleRegister}
         >
@@ -109,7 +121,7 @@ export const Register = () => {
 
         <Link
           to="/login"
-          className="hover:text-indigo-700"
+          className="hover:text-indigo-700 text-center"
         >
           Have an account? Log in instead!
         </Link>
