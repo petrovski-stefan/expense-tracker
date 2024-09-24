@@ -1,7 +1,8 @@
-import axios from 'axios';
+import { AxiosResponse } from 'axios';
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuthContext from './auth-context/use-auth-context';
+import axiosInstance from './config/custom-axios';
 
 type RegisterCredentials = {
   username: string;
@@ -9,7 +10,7 @@ type RegisterCredentials = {
   confirmPassword: string;
 };
 
-type RegisterResponse = {
+type RegisterResponseData = {
   username: string;
   token: string;
   message: string;
@@ -30,19 +31,14 @@ export const Register = () => {
     confirmPassword: '',
   });
 
-  const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
 
   const { login } = useAuthContext();
   const navigate = useNavigate();
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
-
-    if (registerCredentials.password !== registerCredentials.confirmPassword) {
-      setError('Passwords do not match. Try again.');
-      return;
-    }
 
     if (
       registerCredentials.username === '' ||
@@ -53,16 +49,21 @@ export const Register = () => {
       return;
     }
 
+    if (registerCredentials.password !== registerCredentials.confirmPassword) {
+      setError('Passwords do not match. Try again.');
+      return;
+    }
+
     setLoading(true);
     setError(undefined);
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/account/register', {
-        username: registerCredentials.username,
-        password: registerCredentials.password,
-      });
+      const response: AxiosResponse<RegisterResponseData> = await axiosInstance.post(
+        '/account/register',
+        registerCredentials
+      );
 
       if (response.status === 201) {
-        const { token, username, message } = response.data as RegisterResponse;
+        const { token, username, message } = response.data;
         login(username, token);
         setLoading(false);
         navigate('/');

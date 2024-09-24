@@ -1,14 +1,15 @@
-import axios from 'axios';
+import { AxiosResponse } from 'axios';
 import { FormEvent, useState } from 'react';
 import useAuthContext from './auth-context/use-auth-context';
 import { Link, useNavigate } from 'react-router-dom';
+import axiosInstance from './config/custom-axios';
 
 type LoginCredentials = {
   username: string;
   password: string;
 };
 
-type LoginResponse = {
+type LoginResponseData = {
   username: string;
   token: string;
   message: string;
@@ -28,9 +29,10 @@ export const Login = () => {
     password: '',
   });
 
-  const { login } = useAuthContext();
-  const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
+
+  const { login } = useAuthContext();
   const navigate = useNavigate();
 
   const handleLogin = async (e: FormEvent) => {
@@ -45,13 +47,13 @@ export const Login = () => {
     setError(undefined);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/account/login', {
-        username: loginCredentials.username,
-        password: loginCredentials.password,
-      });
+      const response: AxiosResponse<LoginResponseData> = await axiosInstance.post(
+        '/account/login',
+        loginCredentials
+      );
 
       if (response.status === 200) {
-        const { token, username, message } = response.data as LoginResponse;
+        const { token, username, message } = response.data;
         login(username, token);
         setLoading(false);
         navigate('/');
