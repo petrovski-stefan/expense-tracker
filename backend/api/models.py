@@ -17,8 +17,14 @@ class Transaction(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=25, unique=True)
+    name = models.CharField(max_length=25)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (
+            "name",
+            "user",
+        )
 
     def __str__(self) -> str:
         return f"Category {self.name} by {self.user}"

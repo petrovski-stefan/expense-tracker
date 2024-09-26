@@ -1,3 +1,4 @@
+from api.utils.initial_categories import create_initial_categories
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
@@ -35,6 +36,8 @@ def register(request: Request) -> Response:
     serializer.is_valid(raise_exception=True)
     user_instance = serializer.save()
     token_instance = Token.objects.create(user=user_instance)
+
+    create_initial_categories(user_instance)
 
     return Response(
         {
