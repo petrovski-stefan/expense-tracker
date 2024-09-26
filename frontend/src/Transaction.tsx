@@ -1,9 +1,14 @@
-type TransactionType = { date: string; amount: number; category: string; note: string };
+import { TransactionType } from './Dashboard';
 
-export const Transaction = ({ amount, category, date, note }: TransactionType) => {
+export const Transaction = ({ id, amount, category, date, note }: TransactionType) => {
+  const dateString = new Date(date).toDateString();
   return (
-    <li>
-      {amount}$ {date} - {category} - {note}
+    <li className="flex justify-around text-center">
+      <p className="justify-center">{dateString}</p>
+      <p className="justify-center">{amount}$</p>
+      <div className="text-center">{id}</div>
+      <div>{note}</div>
+      <div>{category.name}</div>
     </li>
   );
 };
