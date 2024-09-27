@@ -10,6 +10,34 @@ class CategoryPublicSerializer(ModelSerializer):
         fields = ["id", "name"]
 
 
+class CategorySerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ["id", "name"]
+
+    def validate(self, data: dict) -> dict:
+
+        category_name = data.get("name")
+        user_instance = self.context.get("user")
+
+        if not user_instance:
+            raise ValidationError("User in context not present.")
+
+        if (
+            Category.objects.filter(user=user_instance)
+            .filter(name=category_name)
+            .exists()
+        ):
+            raise ValidationError("Category already exists.")
+
+        return data
+
+    def create(self, validated_data: dict) -> Category:
+        user_instance = self.context.get("user")
+
+        return Category.objects.create(**validated_data, user=user_instance)
+
+
 class TransactionPublicSerializer(ModelSerializer):
     class Meta:
         model = Transaction

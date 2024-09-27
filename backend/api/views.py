@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
@@ -7,6 +8,7 @@ from rest_framework.views import APIView
 from .models import Category, Transaction
 from .serializers import (
     CategoryPublicSerializer,
+    CategorySerializer,
     TransactionPublicSerializer,
     TransactionSerializer,
 )
@@ -57,3 +59,30 @@ class CategoryView(APIView):
         )
 
         return Response({"categories": serializer.data}, status=status.HTTP_200_OK)
+
+    def post(self, request: Request) -> Response:
+
+        if request.auth is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = CategorySerializer(
+            data=request.data, context={"user": request.user}
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class CategoryDetailsView(APIView):
+    def delete(self, request: Request, pk: int) -> Response:
+
+        if request.auth is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        category_instance = get_object_or_404(Category, pk=pk)
+        category_instance.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
