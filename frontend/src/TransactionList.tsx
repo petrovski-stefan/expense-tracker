@@ -1,4 +1,4 @@
-import { TransactionType } from './Dashboard';
+import { TransactionType } from './pages/dashboard/Dashboard';
 import { Transaction } from './Transaction';
 
 type TransactionListProps = {

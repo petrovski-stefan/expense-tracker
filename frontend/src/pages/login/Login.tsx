@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios';
 import { FormEvent, useState } from 'react';
-import useAuthContext from './auth-context/use-auth-context';
+import useAuthContext from '../../auth-context/use-auth-context';
 import { Link, useNavigate } from 'react-router-dom';
-import axiosInstance from './config/custom-axios';
+import axiosInstance from '../../config/custom-axios';
 
 type LoginCredentials = {
   username: string;

@@ -1,4 +1,4 @@
-import useAuthContext from './auth-context/use-auth-context';
+import useAuthContext from '../auth-context/use-auth-context';
 
 export const CurrentLoggedInUser = () => {
   const { authInfo } = useAuthContext();

@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { CurrentLoggedInUser } from './CurrentLoggedInUser';
-import { TransactionList } from './TransactionList';
+import { CurrentLoggedInUser } from '../../shared-components/CurrentLoggedInUser';
+import { TransactionList } from '../../TransactionList';
 import { ChartsContainer } from './ChartsContainer';
-import useAuthContext from './auth-context/use-auth-context';
+import useAuthContext from '../../auth-context/use-auth-context';
 import { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { TransactionModalForm } from './TransactionModalForm';

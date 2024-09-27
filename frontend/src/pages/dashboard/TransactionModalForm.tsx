@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { FormEvent, useEffect, useState } from 'react';
-import useAuthContext from './auth-context/use-auth-context';
-import axiosInstance from './config/custom-axios';
+import useAuthContext from '../../auth-context/use-auth-context';
+import axiosInstance from '../../config/custom-axios';
 import { TransactionType } from './Dashboard';
 
 type TransactionModalFormProps = {

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { CurrentLoggedInUser } from './CurrentLoggedInUser';
-import useAuthContext from './auth-context/use-auth-context';
+import { CurrentLoggedInUser } from '../shared-components/CurrentLoggedInUser';
+import useAuthContext from '../auth-context/use-auth-context';
 
 const links = [
   { path: '/', name: 'DASHBOARD', needsAuth: true },
   { path: '/transactions', name: 'TRANSACTIONS', needsAuth: true },
-  { path: '/settings', name: 'SETTINGS', needsAuth: true },
+  { path: '/preferences', name: 'PREFERENCES', needsAuth: true },
   { path: '/login', name: 'LOGIN', needsAuth: false },
   { path: '/register', name: 'REGISTER', needsAuth: false },
 ];

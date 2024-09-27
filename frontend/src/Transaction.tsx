@@ -1,4 +1,4 @@
-import { TransactionType } from './Dashboard';
+import { TransactionType } from './pages/dashboard/Dashboard';
 
 export const Transaction = ({ id, amount, category, date, note }: TransactionType) => {
   const dateString = new Date(date).toDateString();

@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
-import { Login } from './Login';
-import { Register } from './Register';
-import { Sidebar } from './Sidebar';
-import { Dashboard } from './Dashboard';
+import { Login } from './pages/login/Login';
+import { Register } from './pages/register/Register';
+import { Sidebar } from './layout/Sidebar';
+import { Dashboard } from './pages/dashboard/Dashboard';
 
 const App = () => {
   return (
@@ -19,8 +19,8 @@ const App = () => {
             element={<h1>Transactions</h1>}
           />
           <Route
-            path="/settings"
-            element={<h1>Settings</h1>}
+            path="/preferences"
+            element={<h1>Preferences</h1>}
           />
           <Route
             path="/login"
