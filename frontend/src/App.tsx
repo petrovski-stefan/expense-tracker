@@ -1,14 +1,15 @@
 import { Routes, Route } from 'react-router-dom';
 import { Login } from './pages/login/Login';
 import { Register } from './pages/register/Register';
-import { Sidebar } from './layout/Sidebar';
+import { Sidebar } from './shared-components/Sidebar';
 import { Dashboard } from './pages/dashboard/Dashboard';
+import { Preferences } from './pages/preferences/Preferences';
 
 const App = () => {
   return (
-    <div className="flex h-screen md:flex-row flex-col">
+    <div className="flex min-h-screen md:flex-row flex-col">
       <Sidebar />
-      <div className="h-full md:w-4/5 border bg-slate-200 p-2">
+      <div className="md:w-4/5 md:ms-[20%] border bg-slate-200 p-2">
         <Routes>
           <Route
             path="/"
@@ -20,7 +21,7 @@ const App = () => {
           />
           <Route
             path="/preferences"
-            element={<h1>Preferences</h1>}
+            element={<Preferences />}
           />
           <Route
             path="/login"
