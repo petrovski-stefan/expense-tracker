@@ -39,6 +39,8 @@ class CategorySerializer(ModelSerializer):
 
 
 class TransactionPublicSerializer(ModelSerializer):
+    category = CategoryPublicSerializer(read_only=True)
+
     class Meta:
         model = Transaction
         exclude = ["user"]
