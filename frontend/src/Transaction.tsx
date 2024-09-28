@@ -8,7 +8,7 @@ export const Transaction = ({ id, amount, category, date, note }: TransactionTyp
       <p className="justify-center">{amount}$</p>
       <div className="text-center">{id}</div>
       <div>{note}</div>
-      <div>{category.name}</div>
+      <div>{category?.name ?? 'Category not present'}</div>
     </li>
   );
 };

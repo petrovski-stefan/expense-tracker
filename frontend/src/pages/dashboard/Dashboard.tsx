@@ -7,14 +7,14 @@ import { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { TransactionModalForm } from './TransactionModalForm';
 
+type Category = { name: string };
+
 export type TransactionType = {
   id: number;
   amount: number;
   note: string;
   date: string;
-  category: {
-    name: string;
-  };
+  category: Category | null;
 };
 
 type TransactionsData = {
