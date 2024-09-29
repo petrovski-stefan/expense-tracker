@@ -25,9 +25,24 @@ class TransactionView(APIView):
         if request.auth is None:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        serializer = TransactionPublicSerializer(
-            Transaction.objects.filter(user=request.user), many=True
-        )
+        from_date = request.query_params.get("fromDate", None)
+        to_date = request.query_params.get("toDate", None)
+
+        all_transaction_qs = Transaction.objects.filter(user=request.user)
+
+        if not from_date and not to_date:
+            serializer = TransactionPublicSerializer(all_transaction_qs, many=True)
+            return Response(
+                {"transactions": serializer.data}, status=status.HTTP_200_OK
+            )
+
+        if from_date:
+            filtered_qs = all_transaction_qs.filter(date__gt=from_date)
+
+        if to_date:
+            filtered_qs = all_transaction_qs.filter(date__lt=to_date)
+
+        serializer = TransactionPublicSerializer(filtered_qs, many=True)
         return Response({"transactions": serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
