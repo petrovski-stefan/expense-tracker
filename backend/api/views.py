@@ -19,7 +19,7 @@ def index(request: Request) -> Response:
     return Response({"message": "The app is running!"}, status=status.HTTP_200_OK)
 
 
-class TransactionsListView(APIView):
+class TransactionView(APIView):
     def get(self, request: Request) -> Response:
 
         if request.auth is None:
@@ -30,8 +30,6 @@ class TransactionsListView(APIView):
         )
         return Response({"transactions": serializer.data}, status=status.HTTP_200_OK)
 
-
-class TransactionView(APIView):
     def post(self, request: Request) -> Response:
 
         if request.auth is None:
@@ -46,6 +44,18 @@ class TransactionView(APIView):
         return Response(
             {"transaction": serializer.data}, status=status.HTTP_201_CREATED
         )
+
+
+class TransactionDetailsView(APIView):
+    def delete(self, request: Request, pk: int) -> Response:
+
+        if request.auth is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        transaction_instance = get_object_or_404(Transaction, pk=pk)
+        transaction_instance.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CategoryView(APIView):
