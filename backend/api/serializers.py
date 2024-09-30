@@ -58,7 +58,7 @@ class TransactionSerializer(ModelSerializer):
 
         category_id = data.get("category_id")
 
-        if not Category.objects.filter(id=category_id).exists():
+        if category_id != -1 and not Category.objects.filter(id=category_id).exists():
             raise ValidationError("Category does not exists.")
 
         if not self.context.get("user"):
@@ -76,3 +76,20 @@ class TransactionSerializer(ModelSerializer):
         return Transaction.objects.create(
             **validated_data, category=category_instance, user=user_instance
         )
+
+    def update(self, instance: Transaction, validated_data: dict) -> Transaction:
+
+        instance.date = validated_data.get("date", instance.date)
+        instance.amount = validated_data.get("amount", instance.amount)
+        instance.note = validated_data.get("note", instance.note)
+
+        category_id = validated_data.get("category_id")
+        if category_id == -1:
+            instance.category = None
+        else:
+            category_instance = Category.objects.get(pk=category_id)
+            instance.category = category_instance
+
+        instance.save()
+
+        return instance

@@ -55,13 +55,33 @@ class TransactionView(APIView):
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        print(serializer.data)
+
         return Response(
             {"transaction": serializer.data}, status=status.HTTP_201_CREATED
         )
 
 
 class TransactionDetailsView(APIView):
+
+    def put(self, request: Request, pk: int) -> Response:
+
+        if request.auth is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        transaction_instance = get_object_or_404(Transaction, pk=pk)
+
+        serializer = TransactionSerializer(
+            instance=transaction_instance,
+            data=request.data,
+            context={"user": request.user},
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        return Response({"transaction": serializer.data}, status=status.HTTP_200_OK)
+
     def delete(self, request: Request, pk: int) -> Response:
 
         if request.auth is None:
@@ -98,7 +118,7 @@ class CategoryView(APIView):
 
         serializer.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class CategoryDetailsView(APIView):
