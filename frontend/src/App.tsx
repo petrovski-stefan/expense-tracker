@@ -4,6 +4,7 @@ import { Register } from './pages/register/Register';
 import { Sidebar } from './shared-components/Sidebar';
 import { Dashboard } from './pages/dashboard/Dashboard';
 import { Preferences } from './pages/preferences/Preferences';
+import { Transactions } from './pages/transactions/Transactions';
 
 const App = () => {
   return (
@@ -17,7 +18,7 @@ const App = () => {
           />
           <Route
             path="/transactions"
-            element={<h1>Transactions</h1>}
+            element={<Transactions />}
           />
           <Route
             path="/preferences"
