@@ -9,6 +9,7 @@ from .models import Category, Transaction
 from .serializers import (
     CategoryPublicSerializer,
     CategorySerializer,
+    CategoryTotalSerializer,
     TransactionPublicSerializer,
     TransactionSerializer,
 )
@@ -99,11 +100,33 @@ class CategoryView(APIView):
         if request.auth is None:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        serializer = CategoryPublicSerializer(
-            Category.objects.filter(user=request.user), many=True
+        is_top_categories = request.query_params.get("topCategories", None)
+
+        if not is_top_categories:
+            serializer = CategoryPublicSerializer(
+                Category.objects.filter(user=request.user), many=True
+            )
+
+            return Response({"categories": serializer.data}, status=status.HTTP_200_OK)
+
+        top_categories = Category.objects.raw(
+            """
+        SELECT C.ID, C.NAME, SUM(T.amount) as total_amount 
+        FROM api_category as C 
+        INNER JOIN api_transaction AS T 
+        ON C.id = T.category_id 
+        WHERE T.user_id = %s  
+        GROUP BY C.id, C.name  
+        ORDER BY total_amount DESC 
+        """,
+            [request.user.id],  # type: ignore
         )
 
-        return Response({"categories": serializer.data}, status=status.HTTP_200_OK)
+        top_categories_serializer = CategoryTotalSerializer(top_categories, many=True)
+
+        return Response(
+            {"categories": top_categories_serializer.data}, status=status.HTTP_200_OK
+        )
 
     def post(self, request: Request) -> Response:
 

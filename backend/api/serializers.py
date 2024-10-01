@@ -10,6 +10,14 @@ class CategoryPublicSerializer(ModelSerializer):
         fields = ["id", "name"]
 
 
+class CategoryTotalSerializer(ModelSerializer):
+    total_amount = serializers.FloatField(read_only=True)
+
+    class Meta:
+        model = Category
+        fields = ["id", "name", "total_amount"]
+
+
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category

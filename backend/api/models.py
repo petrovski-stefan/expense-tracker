@@ -8,9 +8,16 @@ class Transaction(models.Model):
     amount = models.FloatField()
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     category = models.ForeignKey(
-        to="Category", null=True, blank=False, on_delete=models.SET_NULL
+        to="Category",
+        related_name="transactions",
+        null=True,
+        blank=False,
+        on_delete=models.SET_NULL,
     )
     note = models.CharField(max_length=50, blank=True)
+
+    class Meta:
+        ordering = ["-date"]
 
     def __str__(self) -> str:
         return f"Transaction {self.amount} by {self.user} on {self.date}"
