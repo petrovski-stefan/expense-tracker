@@ -23,7 +23,7 @@ export const CategoryModalForm = ({
 
     try {
       const response: AxiosResponse<Category> = await axiosInstance.post(
-        '/category-list',
+        '/category',
         {
           name: name,
         },

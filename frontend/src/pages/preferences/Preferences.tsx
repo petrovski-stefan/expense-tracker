@@ -7,7 +7,7 @@ export const Preferences = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className={`flex flex-col p-2 z-0`}>
+    <div className={`min-h-screen flex flex-col p-2 z-0`}>
       <Header
         buttonText={'Add category'}
         setIsModalOpen={setIsModalOpen}

@@ -25,6 +25,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setAuthInfo({ username: '', token: '' });
     localStorage.removeItem('ET_AUTH_TOKEN');
     localStorage.removeItem('ET_AUTH_USERNAME');
+    localStorage.removeItem('ET_CURRENCY');
   };
 
   return (

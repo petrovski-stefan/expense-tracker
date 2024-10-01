@@ -26,14 +26,11 @@ export const CategoryManager = ({ isModalOpen, setIsModalOpen }: CategoryManager
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const response: AxiosResponse<CategoryResponseData> = await axiosInstance.get(
-          '/category-list',
-          {
-            headers: {
-              Authorization: `Token ${authInfo.token}`,
-            },
-          }
-        );
+        const response: AxiosResponse<CategoryResponseData> = await axiosInstance.get('/category', {
+          headers: {
+            Authorization: `Token ${authInfo.token}`,
+          },
+        });
         if (response.status === 200) {
           setCategories([...response.data.categories]);
         }

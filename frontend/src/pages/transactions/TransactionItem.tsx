@@ -1,3 +1,4 @@
+import useCurrencyContext from '../../currency-context/use-currency-context';
 import { TransactionType } from '../dashboard/Dashboard';
 
 type TransactionItemProps = TransactionType & {
@@ -14,6 +15,7 @@ export const TransactionItem = ({
   handleDelete,
   handleUpdate,
 }: TransactionItemProps) => {
+  const { symbol } = useCurrencyContext();
   const dateString = new Date(date).toDateString();
   const noteString = note === '' ? 'No details' : note;
   const categoryString = category?.name ?? 'Uncategorized';
@@ -27,7 +29,10 @@ export const TransactionItem = ({
         </div>
 
         <div>
-          <p className="font-bold text-center">{amount}$</p>
+          <p className="font-bold text-center">
+            {amount}
+            {symbol}
+          </p>
           <p className="font-bold text-center">{noteString}</p>
         </div>
         <div className="flex flex-col gap-1 md:flex-row w-[25%] justify-around">
