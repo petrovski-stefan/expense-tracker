@@ -35,6 +35,7 @@ export const CategoryModalForm = ({
       );
       if (response.status === 201) {
         setCategories((oldCategories) => [...oldCategories, response.data]);
+        setName('');
       }
     } catch (error) {
       console.error(error);
@@ -58,6 +59,7 @@ export const CategoryModalForm = ({
               className="w-[60%] sm:w-[70%] border border-black rounded-md"
               type="text"
               maxLength={50}
+              value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>

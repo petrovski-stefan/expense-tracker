@@ -12,7 +12,7 @@ export const Preferences = () => {
         buttonText={'Add category'}
         setIsModalOpen={setIsModalOpen}
       />
-      <div className="md:min-h-[90%] md:flex">
+      <div className="md:min-h-[90%] flex flex-col-reverse md:flex-row ">
         <CategoryManager
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}

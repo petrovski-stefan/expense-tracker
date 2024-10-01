@@ -32,12 +32,14 @@ export const CategoryItem = ({ id, name, setCategories }: CategoryProps) => {
     <li className="py-1 px-2 my-1 rounded-md w-4/5 mx-auto bg-white">
       <div className="flex justify-between">
         <div className="text-indigo-700 font-bold">{name}</div>
-        <button
-          onClick={() => handleDelete(id)}
-          className="text-red-700"
-        >
-          Delete
-        </button>
+        <div className="bg-red-700 px-2 py-1 rounded-lg my-auto">
+          <button
+            onClick={() => handleDelete(id)}
+            className="text-white"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </li>
   );

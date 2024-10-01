@@ -49,8 +49,8 @@ export const CategoryManager = ({ isModalOpen, setIsModalOpen }: CategoryManager
         setIsModalOpen={setIsModalOpen}
         setCategories={setCategories}
       />
-      <div className="w-1/2">
-        <h1>Manage your categories</h1>
+      <div className="w-4/5 md:w-1/2 pt-4 flex flex-col gap-y-5 mx-auto">
+        <h1 className="text-center font-bold">Manage your categories</h1>
         <ul>
           {categories.map((category) => (
             <CategoryItem
