@@ -101,3 +101,11 @@ class TransactionSerializer(ModelSerializer):
         instance.save()
 
         return instance
+
+
+class TransactionAmountByMonthSerializer(serializers.Serializer):
+    total_amount = serializers.FloatField(read_only=True)
+    month = serializers.CharField(read_only=True)
+
+    class Meta:
+        fields = ["total_amount", "month"]

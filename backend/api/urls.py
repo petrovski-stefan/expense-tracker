@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
     CategoryDetailsView,
     CategoryView,
+    TransactionAmountByMonth,
     TransactionDetailsView,
     TransactionView,
     index,
@@ -25,6 +26,11 @@ urlpatterns = [
         "transaction/<int:pk>",
         TransactionDetailsView.as_view(),
         name="transaction-details",
+    ),
+    path(
+        "transactions-by-month",
+        TransactionAmountByMonth.as_view(),
+        name="transaction-by-month",
     ),
     # Category
     path(

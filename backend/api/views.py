@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -10,6 +12,7 @@ from .serializers import (
     CategoryPublicSerializer,
     CategorySerializer,
     CategoryTotalSerializer,
+    TransactionAmountByMonthSerializer,
     TransactionPublicSerializer,
     TransactionSerializer,
 )
@@ -154,3 +157,32 @@ class CategoryDetailsView(APIView):
         category_instance.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class TransactionAmountByMonth(APIView):
+
+    def get(self, request: Request) -> Response:
+
+        if request.auth is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        SIX_MONTHS_IN_DAYS = 30 * 6
+        today = date.today()
+        six_months_before = today - timedelta(days=SIX_MONTHS_IN_DAYS)
+
+        transactions_amount_by_month = Transaction.objects.raw(
+            """
+        SELECT T.id,SUBSTRING(T.date,1,7) as month ,SUM(T.amount) as total_amount 
+        FROM api_transaction as T 
+        WHERE T.user_id = %s  AND T.date >= %s
+        GROUP BY SUBSTRING(T.date,1,7)
+        """,
+            [request.user.id, six_months_before],  # type: ignore
+        )
+
+        serializer = TransactionAmountByMonthSerializer(
+            transactions_amount_by_month, many=True
+        )
+        return Response(
+            {"transactionsAmountByMonth": serializer.data}, status=status.HTTP_200_OK
+        )
