@@ -14,6 +14,7 @@ Track your spendings by category and gain insights by looking at Bar and Pie cha
 - React.js (with Typescript) for the frontend
 - Django Rest Framework for the backend
 - TailwindCSS for styling and responsive design
+- React router for routing
 - Chart.js for charts
 - Axios.js for making HTTP requests
 - SQLite database for development purposes
