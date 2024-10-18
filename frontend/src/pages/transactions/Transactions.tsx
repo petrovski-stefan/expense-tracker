@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import { CurrentLoggedInUser } from '../../shared-components/CurrentLoggedInUser';
 import { FilterableTransactionList } from './FilterableTransactionList';
-import { TransactionType } from '../dashboard/Dashboard';
+import { Transaction } from '../../models/transaction-types';
 import { TransactionModalForm } from '../../shared-components/TransactionModalForm';
 
 export const Transactions = () => {
-  const [transactions, setTransactions] = useState<TransactionType[]>([]);
+  const [transactions, setTransactions] = useState<Array<Transaction>>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [transactionToEdit, setTransactionToEdit] = useState<TransactionType | undefined>(
-    undefined
-  );
+  const [transactionToEdit, setTransactionToEdit] = useState<Transaction | undefined>(undefined);
 
   return (
     <>

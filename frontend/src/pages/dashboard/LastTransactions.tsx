@@ -1,8 +1,8 @@
-import { TransactionType } from './Dashboard';
+import { Transaction } from '../../models/transaction-types';
 import { ReducedTransactionItem } from './ReducedTransactionItem';
 
 type LastTransactionsProps = {
-  transactions: TransactionType[];
+  transactions: Array<Transaction>;
 };
 
 export const LastTransactions = ({ transactions }: LastTransactionsProps) => {

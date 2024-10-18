@@ -1,7 +1,7 @@
 import useCurrencyContext from '../../currency-context/use-currency-context';
-import { TransactionType } from '../dashboard/Dashboard';
+import { Transaction } from '../../models/transaction-types';
 
-type ReducedTransactionItemProps = TransactionType;
+type ReducedTransactionItemProps = Transaction;
 
 export const ReducedTransactionItem = ({
   amount,

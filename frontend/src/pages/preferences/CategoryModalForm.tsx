@@ -1,20 +1,19 @@
 import { FormEvent, useState } from 'react';
-import { Category } from './CategoryManager';
-import { AxiosResponse } from 'axios';
-import axiosInstance from '../../config/custom-axios';
 import useAuthContext from '../../auth-context/use-auth-context';
+import { Category } from '../../models/category-types';
+import { createCategory } from '../../services/category-service';
 
-type CategoryModalForm = {
+type CategoryModalFormProps = {
   isModalOpen: boolean;
   setIsModalOpen: (value: boolean) => void;
-  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  setCategories: React.Dispatch<React.SetStateAction<Array<Category>>>;
 };
 
 export const CategoryModalForm = ({
   isModalOpen,
   setIsModalOpen,
   setCategories,
-}: CategoryModalForm) => {
+}: CategoryModalFormProps) => {
   const [name, setName] = useState('');
   const { authInfo } = useAuthContext();
 
@@ -22,17 +21,7 @@ export const CategoryModalForm = ({
     e.preventDefault();
 
     try {
-      const response: AxiosResponse<Category> = await axiosInstance.post(
-        '/category',
-        {
-          name: name,
-        },
-        {
-          headers: {
-            Authorization: `Token ${authInfo.token}`,
-          },
-        }
-      );
+      const response = await createCategory(authInfo.token, { name: name });
       if (response.status === 201) {
         setCategories((oldCategories) => [...oldCategories, response.data]);
         setName('');

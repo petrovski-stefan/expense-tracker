@@ -1,13 +1,8 @@
 import { FormEvent, useEffect, useState } from 'react';
 import useAuthContext from '../../auth-context/use-auth-context';
-import axiosInstance from '../../config/custom-axios';
-import { TransactionType } from '../dashboard/Dashboard';
 import { TransactionItem } from './TransactionItem';
-import { AxiosResponse } from 'axios';
-
-type TransactionsData = {
-  transactions: TransactionType[];
-};
+import { Transaction } from '../../models/transaction-types';
+import { deleteTransaction, getAllTransactions } from '../../services/transaction-service';
 
 type Filters = {
   fromDate: string;
@@ -15,10 +10,10 @@ type Filters = {
 };
 
 type FilterableTransactionListProps = {
-  transactions: TransactionType[];
-  setTransactions: React.Dispatch<React.SetStateAction<TransactionType[]>>;
+  transactions: Array<Transaction>;
+  setTransactions: React.Dispatch<React.SetStateAction<Array<Transaction>>>;
   setIsModalOpen: (value: boolean) => void;
-  setTransactionToEdit: (value: TransactionType) => void;
+  setTransactionToEdit: (value: Transaction) => void;
 };
 
 export const FilterableTransactionList = ({
@@ -43,12 +38,7 @@ export const FilterableTransactionList = ({
     setIsLoading(true);
     setError(undefined);
     try {
-      const path = `/transaction${queryParamsString ?? ''}`;
-      const response: AxiosResponse<TransactionsData> = await axiosInstance.get(path, {
-        headers: {
-          Authorization: `Token ${authInfo.token}`,
-        },
-      });
+      const response = await getAllTransactions(authInfo.token, queryParamsString);
 
       if (response.status === 200) {
         setTransactions([...response.data.transactions]);
@@ -63,11 +53,7 @@ export const FilterableTransactionList = ({
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await axiosInstance.delete(`/transaction/${id}`, {
-        headers: {
-          Authorization: `Token ${authInfo.token}`,
-        },
-      });
+      const response = await deleteTransaction(authInfo.token, id);
       if (response.status === 204) {
         setTransactions((oldTransactions) =>
           oldTransactions.filter((transaction) => transaction.id !== id)
@@ -78,7 +64,7 @@ export const FilterableTransactionList = ({
     }
   };
 
-  const handleUpdate = (transaction: TransactionType) => {
+  const handleUpdate = (transaction: Transaction) => {
     setTransactionToEdit(transaction);
     setIsModalOpen(true);
   };
@@ -86,10 +72,10 @@ export const FilterableTransactionList = ({
   const handleUpdateFilters = (e: FormEvent) => {
     e.preventDefault();
 
-    const queryParamsString = `?${Object.keys(dateFilters)
+    const queryParamsString = Object.keys(dateFilters)
       .filter((key) => dateFilters[key as keyof typeof dateFilters] !== '')
       .map((key) => `${key}=${dateFilters[key as keyof typeof dateFilters]}`)
-      .join('&')}`;
+      .join('&');
 
     getTransactions(queryParamsString);
   };

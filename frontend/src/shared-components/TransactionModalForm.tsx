@@ -1,43 +1,31 @@
-import { AxiosResponse } from 'axios';
 import { FormEvent, useEffect, useState } from 'react';
 import useAuthContext from '../auth-context/use-auth-context';
-import axiosInstance from '../config/custom-axios';
-import { TransactionType } from '../pages/dashboard/Dashboard';
+import { Transaction } from '../models/transaction-types';
+import { getAllCategories } from '../services/category-service';
+import { Category } from '../models/category-types';
+import { createTransaction, editTransaction } from '../services/transaction-service';
 
 type TransactionModalFormProps = {
-  transaction?: TransactionType;
+  transaction?: Transaction;
   isModalOpen: boolean;
   setIsModalOpen: (value: boolean) => void;
-  setTransactions: React.Dispatch<React.SetStateAction<TransactionType[]>>;
+  setTransactions: React.Dispatch<React.SetStateAction<Array<Transaction>>>;
 };
 
 type TransactionFormData = {
   amount: number;
   date: string;
   note: string;
-  category_id: string;
+  category_id: number;
 };
 
-type TransactionResponseData = {
-  transaction: TransactionType;
-};
-
-type Category = {
-  id: string;
-  name: string;
-};
-
-type CategoryResponseData = {
-  categories: Category[];
-};
-
-const getFormInitialData = (transaction: TransactionType | undefined) => {
+const getFormInitialData = (transaction: Transaction | undefined) => {
   if (transaction === undefined) {
     return {
       amount: 0,
       date: '',
       note: '',
-      category_id: '',
+      category_id: -1,
     } as TransactionFormData;
   }
 
@@ -45,7 +33,7 @@ const getFormInitialData = (transaction: TransactionType | undefined) => {
     amount: transaction.amount,
     date: transaction.date,
     note: transaction.note,
-    category_id: transaction.category ? transaction.category.id : '-1',
+    category_id: transaction.category ? transaction.category.id : -1,
   };
 };
 
@@ -59,19 +47,15 @@ export const TransactionModalForm = ({
     amount: 0,
     date: '',
     note: '',
-    category_id: '',
+    category_id: -1,
   });
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Array<Category>>([]);
   const { authInfo } = useAuthContext();
 
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const response: AxiosResponse<CategoryResponseData> = await axiosInstance.get('/category', {
-          headers: {
-            Authorization: `Token ${authInfo.token}`,
-          },
-        });
+        const response = await getAllCategories(authInfo.token);
         if (response.status === 200) {
           setCategories([...response.data.categories]);
         }
@@ -90,34 +74,20 @@ export const TransactionModalForm = ({
     }
   }, [transaction]);
 
-  const handleRequest = (
-    transaction: TransactionType | undefined,
-    formData: TransactionFormData
-  ) => {
+  const handleRequest = (transaction: Transaction | undefined, formData: TransactionFormData) => {
     if (transaction) {
-      return axiosInstance.put(`/transaction/${transaction.id}`, formData, {
-        headers: {
-          Authorization: `Token ${authInfo.token}`,
-        },
-      });
+      return editTransaction(authInfo.token, transaction.id, formData);
     }
-    return axiosInstance.post('/transaction', formData, {
-      headers: {
-        Authorization: `Token ${authInfo.token}`,
-      },
-    });
+    return createTransaction(authInfo.token, formData);
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
-      const response: AxiosResponse<TransactionResponseData> = await handleRequest(
-        transaction,
-        formData
-      );
+      const response = await handleRequest(transaction, formData);
 
-      console.log(response.data);
+      console.log(response);
       if (response.status === 201 || response.status === 200) {
         if (transaction === undefined) {
           setTransactions((oldTransactions) => [...oldTransactions, response.data.transaction]);
@@ -127,7 +97,7 @@ export const TransactionModalForm = ({
             response.data.transaction,
           ]);
         }
-        setFormData({ amount: 0, date: '', note: '', category_id: '' });
+        setFormData({ amount: 0, date: '', note: '', category_id: -1 });
         setIsModalOpen(false);
       }
     } catch (error) {
@@ -184,7 +154,7 @@ export const TransactionModalForm = ({
             <select
               className="w-[60%] sm:w-[70%] border border-black rounded-md"
               value={formData.category_id}
-              onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, category_id: Number(e.target.value) })}
             >
               <option
                 defaultChecked

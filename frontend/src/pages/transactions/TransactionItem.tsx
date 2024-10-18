@@ -1,9 +1,9 @@
 import useCurrencyContext from '../../currency-context/use-currency-context';
-import { TransactionType } from '../dashboard/Dashboard';
+import { Transaction } from '../../models/transaction-types';
 
-type TransactionItemProps = TransactionType & {
+type TransactionItemProps = Transaction & {
   handleDelete: (id: number) => void;
-  handleUpdate: (transaction: TransactionType) => void;
+  handleUpdate: (transaction: Transaction) => void;
 };
 
 export const TransactionItem = ({

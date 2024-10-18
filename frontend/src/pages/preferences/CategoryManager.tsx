@@ -1,18 +1,9 @@
 import { useEffect, useState } from 'react';
 import useAuthContext from '../../auth-context/use-auth-context';
-import { AxiosResponse } from 'axios';
-import axiosInstance from '../../config/custom-axios';
 import { CategoryItem } from './CategoryItem';
 import { CategoryModalForm } from './CategoryModalForm';
-
-export type Category = {
-  id: number;
-  name: string;
-};
-
-type CategoryResponseData = {
-  categories: Category[];
-};
+import { getAllCategories } from '../../services/category-service';
+import { Category } from '../../models/category-types';
 
 type CategoryManagerProps = {
   isModalOpen: boolean;
@@ -20,17 +11,14 @@ type CategoryManagerProps = {
 };
 
 export const CategoryManager = ({ isModalOpen, setIsModalOpen }: CategoryManagerProps) => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Array<Category>>([]);
   const { authInfo } = useAuthContext();
 
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const response: AxiosResponse<CategoryResponseData> = await axiosInstance.get('/category', {
-          headers: {
-            Authorization: `Token ${authInfo.token}`,
-          },
-        });
+        const response = await getAllCategories(authInfo.token);
+
         if (response.status === 200) {
           setCategories([...response.data.categories]);
         }

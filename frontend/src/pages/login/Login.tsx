@@ -1,19 +1,7 @@
-import { AxiosResponse } from 'axios';
 import { FormEvent, useState } from 'react';
 import useAuthContext from '../../auth-context/use-auth-context';
 import { Link, useNavigate } from 'react-router-dom';
-import axiosInstance from '../../config/custom-axios';
-
-type LoginCredentials = {
-  username: string;
-  password: string;
-};
-
-type LoginResponseData = {
-  username: string;
-  token: string;
-  message: string;
-};
+import { postLoginUser, LoginRequest } from '../../services/user-service';
 
 type ApiError = {
   response: {
@@ -24,7 +12,7 @@ type ApiError = {
 };
 
 export const Login = () => {
-  const [loginCredentials, setLoginCredentials] = useState<LoginCredentials>({
+  const [loginCredentials, setLoginCredentials] = useState<LoginRequest>({
     username: '',
     password: '',
   });
@@ -47,10 +35,7 @@ export const Login = () => {
     setError(undefined);
 
     try {
-      const response: AxiosResponse<LoginResponseData> = await axiosInstance.post(
-        '/account/login',
-        loginCredentials
-      );
+      const response = await postLoginUser(loginCredentials);
 
       if (response.status === 200) {
         const { token, username, message } = response.data;

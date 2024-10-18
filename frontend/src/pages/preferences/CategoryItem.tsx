@@ -1,11 +1,11 @@
 import useAuthContext from '../../auth-context/use-auth-context';
-import axiosInstance from '../../config/custom-axios';
-import { Category } from './CategoryManager';
+import { Category } from '../../models/category-types';
+import { deleteCategory } from '../../services/category-service';
 
 type CategoryProps = {
   id: number;
   name: string;
-  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  setCategories: React.Dispatch<React.SetStateAction<Array<Category>>>;
 };
 
 export const CategoryItem = ({ id, name, setCategories }: CategoryProps) => {
@@ -13,11 +13,7 @@ export const CategoryItem = ({ id, name, setCategories }: CategoryProps) => {
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await axiosInstance.delete(`/category/${id}`, {
-        headers: {
-          Authorization: `Token ${authInfo.token}`,
-        },
-      });
+      const response = await deleteCategory(authInfo.token, id);
       if (response.status === 204) {
         setCategories((oldCategories) => oldCategories.filter((category) => category.id !== id));
         // TODO: alert is blocking. Try something else

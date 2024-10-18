@@ -1,20 +1,7 @@
-import { AxiosResponse } from 'axios';
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuthContext from '../../auth-context/use-auth-context';
-import axiosInstance from '../../config/custom-axios';
-
-type RegisterCredentials = {
-  username: string;
-  password: string;
-  confirmPassword: string;
-};
-
-type RegisterResponseData = {
-  username: string;
-  token: string;
-  message: string;
-};
+import { postRegisterUser, RegisterRequest } from '../../services/user-service';
 
 type ApiError = {
   response: {
@@ -25,7 +12,7 @@ type ApiError = {
 };
 
 export const Register = () => {
-  const [registerCredentials, setRegisterCredentials] = useState<RegisterCredentials>({
+  const [registerCredentials, setRegisterCredentials] = useState<RegisterRequest>({
     username: '',
     password: '',
     confirmPassword: '',
@@ -57,10 +44,7 @@ export const Register = () => {
     setLoading(true);
     setError(undefined);
     try {
-      const response: AxiosResponse<RegisterResponseData> = await axiosInstance.post(
-        '/account/register',
-        registerCredentials
-      );
+      const response = await postRegisterUser(registerCredentials);
 
       if (response.status === 201) {
         const { token, username, message } = response.data;
