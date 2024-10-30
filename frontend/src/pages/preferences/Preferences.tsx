@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Header } from '../../shared-components/Header';
+import { Header } from '../shared/Header';
 import { CategoryManager } from './CategoryManager';
 import { CurrencyManager } from './CurrencyManager';
 

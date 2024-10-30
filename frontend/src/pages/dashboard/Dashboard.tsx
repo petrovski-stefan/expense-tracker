@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { ChartsContainer } from './ChartsContainer';
 import useAuthContext from '../../auth-context/use-auth-context';
 import { useEffect, useState } from 'react';
-import { TransactionModalForm } from '../../shared-components/TransactionModalForm';
+import { TransactionModalForm } from '../shared/TransactionModalForm';
 import { AxiosResponse } from 'axios';
 import { LastTransactions } from './LastTransactions';
 import { TopCategories } from './TopCategories';
-import { Header } from '../../shared-components/Header';
+import { Header } from '../shared/Header';
 import { Transaction } from '../../models/transaction-types';
 import {
   getAllTransactions,

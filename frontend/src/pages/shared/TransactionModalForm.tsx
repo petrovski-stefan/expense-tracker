@@ -1,9 +1,9 @@
 import { FormEvent, useEffect, useState } from 'react';
-import useAuthContext from '../auth-context/use-auth-context';
-import { Transaction } from '../models/transaction-types';
-import { getAllCategories } from '../services/category-service';
-import { Category } from '../models/category-types';
-import { createTransaction, editTransaction } from '../services/transaction-service';
+import useAuthContext from '../../auth-context/use-auth-context';
+import { Transaction } from '../../models/transaction-types';
+import { getAllCategories } from '../../services/category-service';
+import { Category } from '../../models/category-types';
+import { createTransaction, editTransaction } from '../../services/transaction-service';
 
 type TransactionModalFormProps = {
   transaction?: Transaction;

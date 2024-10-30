@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Login } from './pages/login/Login';
 import { Register } from './pages/register/Register';
-import { Sidebar } from './shared-components/Sidebar';
+import { Sidebar } from './pages/shared/Sidebar';
 import { Dashboard } from './pages/dashboard/Dashboard';
 import { Preferences } from './pages/preferences/Preferences';
 import { Transactions } from './pages/transactions/Transactions';
