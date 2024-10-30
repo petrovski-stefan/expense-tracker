@@ -1,8 +1,8 @@
 django
-django-stubs
 djangorestframework
-djangorestframework-stubs
 mypy
+django-stubs[compatible-mypy]
+djangorestframework-stubs
 flake8
 django-cors-headers
 python-dotenv
