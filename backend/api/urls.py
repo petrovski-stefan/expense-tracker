@@ -18,28 +18,28 @@ urlpatterns = [
     ),
     # Transaction
     path(
-        "transaction",
+        "transactions/",
         TransactionView.as_view(),
-        name="transaction",
+        name="transactions",
     ),
     path(
-        "transaction/<int:pk>",
+        "transactions/<int:pk>",
         TransactionDetailsView.as_view(),
         name="transaction-details",
     ),
     path(
-        "transactions-by-month",
+        "transactions/summary/",
         TransactionAmountByMonth.as_view(),
-        name="transaction-by-month",
+        name="transactions-summary",
     ),
     # Category
     path(
-        "category",
+        "categories/",
         CategoryView.as_view(),
-        name="category",
+        name="categories",
     ),
     path(
-        "category/<int:pk>",
+        "categories/<int:pk>",
         CategoryDetailsView.as_view(),
         name="category-details",
     ),
