@@ -1,7 +1,7 @@
-import { ReactNode, useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { authContext } from './use-auth-context';
 
-type AuthProviderProps = { children: ReactNode };
+type AuthProviderProps = PropsWithChildren;
 type AuthInfo = { username: string; token: string };
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
