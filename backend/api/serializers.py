@@ -4,13 +4,13 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 from .models import Category, Transaction
 
 
-class CategoryPublicSerializer(ModelSerializer):
+class CategoryPublicSerializer(ModelSerializer[Category]):
     class Meta:
         model = Category
         fields = ["id", "name"]
 
 
-class CategoryTotalSerializer(ModelSerializer):
+class CategoryTotalSerializer(ModelSerializer[Category]):
     total_amount = serializers.FloatField(read_only=True)
 
     class Meta:
@@ -18,7 +18,7 @@ class CategoryTotalSerializer(ModelSerializer):
         fields = ["id", "name", "total_amount"]
 
 
-class CategorySerializer(ModelSerializer):
+class CategorySerializer(ModelSerializer[Category]):
     class Meta:
         model = Category
         fields = ["id", "name"]
@@ -54,7 +54,7 @@ class TransactionPublicSerializer(ModelSerializer):
         exclude = ["user"]
 
 
-class TransactionSerializer(ModelSerializer):
+class TransactionSerializer(ModelSerializer[Transaction]):
     category_id = serializers.IntegerField(write_only=True)
     category = CategoryPublicSerializer(read_only=True)
 
