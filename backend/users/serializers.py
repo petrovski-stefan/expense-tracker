@@ -1,14 +1,9 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from rest_framework.serializers import (
-    CharField,
-    ModelSerializer,
-    Serializer,
-    ValidationError,
-)
+from rest_framework import serializers
 
 
-class RegistrationSerializer(ModelSerializer):
+class RegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
@@ -16,7 +11,7 @@ class RegistrationSerializer(ModelSerializer):
 
     def validate_username(self, value) -> str:
         if User.objects.filter(username=value).exists():
-            raise ValidationError("The username is already taken!")
+            raise serializers.ValidationError("The username is already taken!")
 
         return value
 
@@ -24,10 +19,10 @@ class RegistrationSerializer(ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 
-class LoginSerializer(Serializer):
+class LoginSerializer(serializers.Serializer):
 
-    username = CharField()
-    password = CharField(write_only=True)
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
 
     def validate(self, data: dict) -> dict:
         username = str(data["username"])
@@ -35,7 +30,7 @@ class LoginSerializer(Serializer):
 
         user_instace = authenticate(username=username, password=password)
         if user_instace is None:
-            raise ValidationError("Wrong credentials. Try again.")
+            raise serializers.ValidationError("Wrong credentials. Try again.")
 
         data["user"] = user_instace
 

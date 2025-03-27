@@ -1,38 +1,29 @@
-from django.contrib.auth.models import User
-from django.db.models import (
-    CASCADE,
-    SET_NULL,
-    CharField,
-    DateField,
-    FloatField,
-    ForeignKey,
-    Model,
-)
+from django.contrib.auth import get_user_model
+from django.db import models
+
+User = get_user_model()
 
 
-class Transaction(Model):
-    date: DateField = DateField()
-    amount: FloatField = FloatField()
-    user: ForeignKey[User] = ForeignKey(to=User, on_delete=CASCADE)
-    category: ForeignKey["Category"] = ForeignKey(
+class Transaction(models.Model):
+    date = models.DateField()
+    amount = models.FloatField()
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    category = models.ForeignKey(
         to="Category",
         related_name="transactions",
         null=True,
         blank=False,
-        on_delete=SET_NULL,
+        on_delete=models.SET_NULL,
     )
-    note: CharField = CharField(max_length=50, blank=True)
-
-    class Meta:
-        ordering = ["-date"]
+    note = models.CharField(max_length=50, blank=True)
 
     def __str__(self) -> str:
         return f"Transaction {self.amount} by {self.user} on {self.date}"
 
 
-class Category(Model):
-    name: CharField = CharField(max_length=25)
-    user: ForeignKey[User] = ForeignKey(to=User, on_delete=CASCADE)
+class Category(models.Model):
+    name = models.CharField(max_length=25)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (

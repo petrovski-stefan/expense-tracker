@@ -1,16 +1,15 @@
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer, ValidationError
 
 from .models import Category, Transaction
 
 
-class CategoryPublicSerializer(ModelSerializer[Category]):
+class CategoryPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ["id", "name"]
 
 
-class CategoryTotalSerializer(ModelSerializer[Category]):
+class CategoryTotalSerializer(serializers.ModelSerializer):
     total_amount = serializers.FloatField(read_only=True)
 
     class Meta:
@@ -18,7 +17,7 @@ class CategoryTotalSerializer(ModelSerializer[Category]):
         fields = ["id", "name", "total_amount"]
 
 
-class CategorySerializer(ModelSerializer[Category]):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ["id", "name"]
@@ -29,14 +28,14 @@ class CategorySerializer(ModelSerializer[Category]):
         user_instance = self.context.get("user")
 
         if not user_instance:
-            raise ValidationError("User in context not present.")
+            raise serializers.ValidationError("User in context not present.")
 
         if (
             Category.objects.filter(user=user_instance)
             .filter(name=category_name)
             .exists()
         ):
-            raise ValidationError("Category already exists.")
+            raise serializers.ValidationError("Category already exists.")
 
         return data
 
@@ -46,7 +45,7 @@ class CategorySerializer(ModelSerializer[Category]):
         return Category.objects.create(**validated_data, user=user_instance)
 
 
-class TransactionPublicSerializer(ModelSerializer):
+class TransactionPublicSerializer(serializers.ModelSerializer):
     category = CategoryPublicSerializer(read_only=True)
 
     class Meta:
@@ -54,7 +53,7 @@ class TransactionPublicSerializer(ModelSerializer):
         exclude = ["user"]
 
 
-class TransactionSerializer(ModelSerializer[Transaction]):
+class TransactionSerializer(serializers.ModelSerializer):
     category_id = serializers.IntegerField(write_only=True)
     category = CategoryPublicSerializer(read_only=True)
 
@@ -67,10 +66,10 @@ class TransactionSerializer(ModelSerializer[Transaction]):
         category_id = data.get("category_id")
 
         if category_id != -1 and not Category.objects.filter(id=category_id).exists():
-            raise ValidationError("Category does not exists.")
+            raise serializers.ValidationError("Category does not exists.")
 
         if not self.context.get("user"):
-            raise ValidationError("User in context not present.")
+            raise serializers.ValidationError("User in context not present.")
 
         return data
 
