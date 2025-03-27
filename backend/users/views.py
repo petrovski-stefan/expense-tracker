@@ -1,9 +1,9 @@
-from api.utils.initial_categories import create_initial_categories
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
+from transactions.utils.initital_categories import create_initial_categories
 
 from .serializers import LoginSerializer, RegistrationSerializer
 
