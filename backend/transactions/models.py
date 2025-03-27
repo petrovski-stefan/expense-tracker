@@ -3,10 +3,15 @@ from django.db import models
 
 User = get_user_model()
 
+TRANSACTION_TYPES = [
+    ("income", "Income"),
+    ("expense", "Expense"),
+]
+
+TRANSACTION_CATEGORY_TYPES = TRANSACTION_TYPES
+
 
 class Transaction(models.Model):
-    date = models.DateField()
-    amount = models.FloatField()
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     category = models.ForeignKey(
         to="Category",
@@ -15,14 +20,22 @@ class Transaction(models.Model):
         blank=False,
         on_delete=models.SET_NULL,
     )
-    note = models.CharField(max_length=50, blank=True)
+
+    date = models.DateField()  # TODO: Change to DateTimeField
+    amount = models.FloatField()
+    note = models.TextField(blank=True)
+    type = models.CharField(choices=TRANSACTION_TYPES, max_length=10)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return f"Transaction {self.amount} by {self.user} on {self.date}"
+        return f"{self.type} - {self.amount} - {self.user} - {self.date}"
 
 
 class Category(models.Model):
     name = models.CharField(max_length=25)
+    type = models.CharField(choices=TRANSACTION_CATEGORY_TYPES, max_length=10)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
 
     class Meta:
@@ -32,4 +45,4 @@ class Category(models.Model):
         )
 
     def __str__(self) -> str:
-        return f"Category {self.name} by {self.user}"
+        return f"Category {self.name} - {self.type} -{self.user}"
