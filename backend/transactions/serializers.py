@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import Category, Transaction
 
 
-class CategoryPublicSerializer(serializers.ModelSerializer):
+class CategoryOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ["id", "name"]
@@ -46,7 +46,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class TransactionPublicSerializer(serializers.ModelSerializer):
-    category = CategoryPublicSerializer(read_only=True)
+    category = CategoryOutputSerializer(read_only=True)
 
     class Meta:
         model = Transaction
@@ -55,7 +55,7 @@ class TransactionPublicSerializer(serializers.ModelSerializer):
 
 class TransactionSerializer(serializers.ModelSerializer):
     category_id = serializers.IntegerField(write_only=True)
-    category = CategoryPublicSerializer(read_only=True)
+    category = CategoryOutputSerializer(read_only=True)
 
     class Meta:
         model = Transaction

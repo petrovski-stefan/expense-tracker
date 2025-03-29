@@ -1,11 +1,11 @@
 from django.urls import path
 
 from .views import (
-    CategoryDetailsView,
-    CategoryView,
+    CategoryCreateListView,
+    CategoryDetailView,
     TransactionAmountByMonth,
-    TransactionDetailsView,
-    TransactionView,
+    TransactionCreateListView,
+    TransactionDetailView,
     index,
 )
 
@@ -19,12 +19,12 @@ urlpatterns = [
     # Transaction
     path(
         "transactions/",
-        TransactionView.as_view(),
+        TransactionCreateListView.as_view(),
         name="transactions",
     ),
     path(
         "transactions/<int:pk>",
-        TransactionDetailsView.as_view(),
+        TransactionDetailView.as_view(),
         name="transaction-details",
     ),
     path(
@@ -35,12 +35,12 @@ urlpatterns = [
     # Category
     path(
         "categories/",
-        CategoryView.as_view(),
+        CategoryCreateListView.as_view(),
         name="categories",
     ),
     path(
         "categories/<int:pk>",
-        CategoryDetailsView.as_view(),
+        CategoryDetailView.as_view(),
         name="category-details",
     ),
 ]

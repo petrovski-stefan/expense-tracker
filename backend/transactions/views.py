@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 from .models import Category, Transaction
 from .serializers import (
-    CategoryPublicSerializer,
+    CategoryOutputSerializer,
     CategorySerializer,
     CategoryTotalSerializer,
     TransactionAmountByMonthSerializer,
@@ -23,7 +23,7 @@ def index(request: Request) -> Response:
     return Response({"message": "The app is running!"}, status=status.HTTP_200_OK)
 
 
-class TransactionView(APIView):
+class TransactionCreateListView(APIView):
     def get(self, request: Request) -> Response:
 
         if request.auth is None:
@@ -65,7 +65,7 @@ class TransactionView(APIView):
         )
 
 
-class TransactionDetailsView(APIView):
+class TransactionDetailView(APIView):
 
     def put(self, request: Request, pk: int) -> Response:
 
@@ -97,7 +97,7 @@ class TransactionDetailsView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CategoryView(APIView):
+class CategoryCreateListView(APIView):
     def get(self, request: Request) -> Response:
 
         if request.auth is None:
@@ -106,7 +106,7 @@ class CategoryView(APIView):
         is_top_categories = request.query_params.get("topCategories", None)
 
         if not is_top_categories:
-            serializer = CategoryPublicSerializer(
+            serializer = CategoryOutputSerializer(
                 Category.objects.filter(user=request.user), many=True
             )
 
@@ -147,7 +147,7 @@ class CategoryView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class CategoryDetailsView(APIView):
+class CategoryDetailView(APIView):
     def delete(self, request: Request, pk: int) -> Response:
 
         if request.auth is None:
