@@ -115,8 +115,8 @@ class CategoryCreateListView(APIView):
         top_categories = Category.objects.raw(
             """
         SELECT C.ID, C.NAME, SUM(T.amount) as total_amount 
-        FROM api_category as C 
-        INNER JOIN api_transaction AS T 
+        FROM transactions_category as C 
+        INNER JOIN transactions_transaction AS T 
         ON C.id = T.category_id 
         WHERE T.user_id = %s  
         GROUP BY C.id, C.name  
@@ -173,7 +173,7 @@ class TransactionAmountByMonth(APIView):
         transactions_amount_by_month = Transaction.objects.raw(
             """
         SELECT T.id,SUBSTRING(T.date,1,7) as month ,SUM(T.amount) as total_amount 
-        FROM api_transaction as T 
+        FROM transactions_transaction as T 
         WHERE T.user_id = %s  AND T.date >= %s
         GROUP BY SUBSTRING(T.date,1,7)
         """,
