@@ -17,6 +17,7 @@ type TransactionFormData = {
   date: string;
   note: string;
   category_id: number;
+  type: 'expense' | 'income';
 };
 
 const getFormInitialData = (transaction: Transaction | undefined) => {
@@ -26,6 +27,7 @@ const getFormInitialData = (transaction: Transaction | undefined) => {
       date: '',
       note: '',
       category_id: -1,
+      type: 'expense',
     } as TransactionFormData;
   }
 
@@ -34,6 +36,7 @@ const getFormInitialData = (transaction: Transaction | undefined) => {
     date: transaction.date,
     note: transaction.note,
     category_id: transaction.category ? transaction.category.id : -1,
+    type: transaction.type,
   };
 };
 
@@ -48,6 +51,7 @@ export const TransactionModalForm = ({
     date: '',
     note: '',
     category_id: -1,
+    type: 'expense',
   });
   const [categories, setCategories] = useState<Array<Category>>([]);
   const { authInfo } = useAuthContext();
@@ -97,7 +101,7 @@ export const TransactionModalForm = ({
             response.data.transaction,
           ]);
         }
-        setFormData({ amount: 0, date: '', note: '', category_id: -1 });
+        setFormData({ amount: 0, date: '', note: '', category_id: -1, type: 'expense' });
         setIsModalOpen(false);
       }
     } catch (error) {
@@ -172,7 +176,36 @@ export const TransactionModalForm = ({
               ))}
             </select>
           </div>
+          <div className="flex justify-between">
+            <label className="w-[40%] sm:w-[30%]">Type</label>
+            <select
+              className="w-[60%] sm:w-[70%] border border-black rounded-md"
+              value={formData.type}
+              onChange={(e) =>
+                setFormData({ ...formData, type: e.target.value as 'expense' | 'income' })
+              }
+            >
+              <option
+                defaultChecked
+                value="-1"
+              >
+                Choose transaction type
+              </option>
 
+              <option
+                key="expense"
+                value="expense"
+              >
+                Expense
+              </option>
+              <option
+                key="income"
+                value="income"
+              >
+                Income
+              </option>
+            </select>
+          </div>
           <button
             type="submit"
             className="px-2 py-1 text-white bg-indigo-700 rounded-full w-4/5 mx-auto mt-2"

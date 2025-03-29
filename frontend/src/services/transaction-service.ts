@@ -14,6 +14,7 @@ type CreateUpdateTransactionRequest = {
   date: string;
   note: string;
   category_id: number;
+  type: 'expense' | 'income';
 };
 
 type TransactionResponse = {
@@ -50,10 +51,7 @@ export const deleteTransaction = (
   authToken: string,
   transactionId: string | number
 ): AxiosPromise => {
-  return axiosInstance.delete(
-    `${TRANSACTION_BASE_PATH}/${transactionId}`,
-    getAuthHeader(authToken)
-  );
+  return axiosInstance.delete(`${TRANSACTION_BASE_PATH}${transactionId}`, getAuthHeader(authToken));
 };
 
 export const getTransactionAmountByMonth = (authToken: string) => {

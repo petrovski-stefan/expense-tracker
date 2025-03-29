@@ -13,8 +13,8 @@ from .serializers import (
     CategorySerializer,
     CategoryTotalSerializer,
     TransactionAmountByMonthSerializer,
-    TransactionPublicSerializer,
-    TransactionSerializer,
+    TransactionInputSerializer,
+    TransactionOutputSerializer,
 )
 
 
@@ -35,7 +35,7 @@ class TransactionCreateListView(APIView):
         all_transaction_qs = Transaction.objects.filter(user=request.user)
 
         if not from_date and not to_date:
-            serializer = TransactionPublicSerializer(all_transaction_qs, many=True)
+            serializer = TransactionOutputSerializer(all_transaction_qs, many=True)
             return Response(
                 {"transactions": serializer.data}, status=status.HTTP_200_OK
             )
@@ -46,7 +46,7 @@ class TransactionCreateListView(APIView):
         if to_date:
             filtered_qs = all_transaction_qs.filter(date__lt=to_date)
 
-        serializer = TransactionPublicSerializer(filtered_qs, many=True)
+        serializer = TransactionOutputSerializer(filtered_qs, many=True)
         return Response({"transactions": serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
@@ -54,7 +54,7 @@ class TransactionCreateListView(APIView):
         if request.auth is None:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        serializer = TransactionSerializer(
+        serializer = TransactionInputSerializer(
             data=request.data, context={"user": request.user}
         )
         serializer.is_valid(raise_exception=True)
@@ -74,7 +74,7 @@ class TransactionDetailView(APIView):
 
         transaction_instance = get_object_or_404(Transaction, pk=pk)
 
-        serializer = TransactionSerializer(
+        serializer = TransactionInputSerializer(
             instance=transaction_instance,
             data=request.data,
             context={"user": request.user},

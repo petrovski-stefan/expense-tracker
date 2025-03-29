@@ -45,21 +45,21 @@ class CategorySerializer(serializers.ModelSerializer):
         return Category.objects.create(**validated_data, user=user_instance)
 
 
-class TransactionPublicSerializer(serializers.ModelSerializer):
+class TransactionOutputSerializer(serializers.ModelSerializer):
     category = CategoryOutputSerializer(read_only=True)
 
     class Meta:
         model = Transaction
-        exclude = ["user"]
+        fields = ["id", "category", "amount", "note", "date", "type"]
 
 
-class TransactionSerializer(serializers.ModelSerializer):
+class TransactionInputSerializer(serializers.ModelSerializer):
     category_id = serializers.IntegerField(write_only=True)
     category = CategoryOutputSerializer(read_only=True)
 
     class Meta:
         model = Transaction
-        fields = ["id", "category_id", "category", "amount", "note", "date"]
+        fields = ["id", "category_id", "category", "amount", "note", "date", "type"]
 
     def validate(self, data: dict) -> dict:
 
