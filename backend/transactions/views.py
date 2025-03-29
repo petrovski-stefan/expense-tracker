@@ -2,7 +2,9 @@ from datetime import date, timedelta
 
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,10 +26,10 @@ def index(request: Request) -> Response:
 
 
 class TransactionCreateListView(APIView):
-    def get(self, request: Request) -> Response:
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-        if request.auth is None:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+    def get(self, request: Request) -> Response:
 
         from_date = request.query_params.get("fromDate", None)
         to_date = request.query_params.get("toDate", None)
@@ -51,9 +53,6 @@ class TransactionCreateListView(APIView):
 
     def post(self, request: Request) -> Response:
 
-        if request.auth is None:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
         serializer = TransactionInputSerializer(
             data=request.data, context={"user": request.user}
         )
@@ -66,11 +65,10 @@ class TransactionCreateListView(APIView):
 
 
 class TransactionDetailView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def put(self, request: Request, pk: int) -> Response:
-
-        if request.auth is None:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         transaction_instance = get_object_or_404(Transaction, pk=pk)
 
@@ -88,9 +86,6 @@ class TransactionDetailView(APIView):
 
     def delete(self, request: Request, pk: int) -> Response:
 
-        if request.auth is None:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
         transaction_instance = get_object_or_404(Transaction, pk=pk)
         transaction_instance.delete()
 
@@ -98,10 +93,10 @@ class TransactionDetailView(APIView):
 
 
 class CategoryCreateListView(APIView):
-    def get(self, request: Request) -> Response:
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-        if request.auth is None:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+    def get(self, request: Request) -> Response:
 
         is_top_categories = request.query_params.get("topCategories", None)
 
@@ -133,9 +128,6 @@ class CategoryCreateListView(APIView):
 
     def post(self, request: Request) -> Response:
 
-        if request.auth is None:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
         serializer = CategorySerializer(
             data=request.data, context={"user": request.user}
         )
@@ -148,10 +140,10 @@ class CategoryCreateListView(APIView):
 
 
 class CategoryDetailView(APIView):
-    def delete(self, request: Request, pk: int) -> Response:
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-        if request.auth is None:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+    def delete(self, request: Request, pk: int) -> Response:
 
         category_instance = get_object_or_404(Category, pk=pk)
         category_instance.delete()
@@ -160,11 +152,10 @@ class CategoryDetailView(APIView):
 
 
 class TransactionAmountByMonth(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
-
-        if request.auth is None:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         SIX_MONTHS_IN_DAYS = 30 * 6
         today = date.today()
