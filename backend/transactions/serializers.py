@@ -89,6 +89,7 @@ class TransactionInputSerializer(serializers.ModelSerializer):
         instance.date = validated_data.get("date", instance.date)
         instance.amount = validated_data.get("amount", instance.amount)
         instance.note = validated_data.get("note", instance.note)
+        instance.type = validated_data.get("type", instance.type)
 
         category_id = validated_data.get("category_id")
         if category_id == -1:
