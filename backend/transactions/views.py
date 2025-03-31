@@ -34,7 +34,7 @@ class TransactionCreateListView(APIView):
         from_date = request.query_params.get("fromDate", None)
         to_date = request.query_params.get("toDate", None)
 
-        all_transaction_qs = Transaction.objects.filter(user=request.user)
+        all_transaction_qs = Transaction.objects.filter(user=request.user)  # type: ignore
 
         if not from_date and not to_date:
             serializer = TransactionOutputSerializer(all_transaction_qs, many=True)
@@ -102,7 +102,7 @@ class CategoryCreateListView(APIView):
 
         if not is_top_categories:
             serializer = CategoryOutputSerializer(
-                Category.objects.filter(user=request.user), many=True
+                Category.objects.filter(user=request.user), many=True  # type: ignore
             )
 
             return Response({"categories": serializer.data}, status=status.HTTP_200_OK)

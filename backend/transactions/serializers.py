@@ -1,3 +1,5 @@
+from datetime import date
+
 from rest_framework import serializers
 
 from .models import Category, Transaction
@@ -42,7 +44,7 @@ class CategorySerializer(serializers.ModelSerializer):
     def create(self, validated_data: dict) -> Category:
         user_instance = self.context.get("user")
 
-        return Category.objects.create(**validated_data, user=user_instance)
+        return Category.objects.create(**validated_data, user=user_instance)  # type: ignore
 
 
 class TransactionOutputSerializer(serializers.ModelSerializer):
@@ -65,7 +67,7 @@ class TransactionInputSerializer(serializers.ModelSerializer):
 
         category_id = data.get("category_id")
 
-        if category_id != -1 and not Category.objects.filter(id=category_id).exists():
+        if category_id != -1 and not Category.objects.filter(id=category_id).exists():  # type: ignore
             raise serializers.ValidationError("Category does not exists.")
 
         if not self.context.get("user"):
@@ -81,7 +83,7 @@ class TransactionInputSerializer(serializers.ModelSerializer):
         user_instance = self.context.get("user")
 
         return Transaction.objects.create(
-            **validated_data, category=category_instance, user=user_instance
+            **validated_data, category=category_instance, user=user_instance  # type: ignore
         )
 
     def update(self, instance: Transaction, validated_data: dict) -> Transaction:
@@ -95,7 +97,7 @@ class TransactionInputSerializer(serializers.ModelSerializer):
         if category_id == -1:
             instance.category = None
         else:
-            category_instance = Category.objects.get(pk=category_id)
+            category_instance = Category.objects.get(pk=category_id)  # type: ignore
             instance.category = category_instance
 
         instance.save()
