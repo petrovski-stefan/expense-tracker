@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 
 from django.db.models import Sum
+from django.db.models.functions import TruncMonth
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
@@ -147,14 +148,12 @@ class TransactionAmountByMonth(APIView):
         today = date.today()
         six_months_before = today - timedelta(days=SIX_MONTHS_IN_DAYS)
 
-        transactions_amount_by_month = Transaction.objects.raw(
-            """
-        SELECT T.id,SUBSTRING(T.date,1,7) as month ,SUM(T.amount) as total_amount 
-        FROM transactions_transaction as T 
-        WHERE T.user_id = %s  AND T.date >= %s
-        GROUP BY SUBSTRING(T.date,1,7)
-        """,
-            [request.user.id, six_months_before],  # type: ignore
+        transactions_amount_by_month = (
+            request.user.transactions.filter(date__gt=six_months_before)  # type: ignore
+            .annotate(month=TruncMonth("date"))
+            .values("month")
+            .annotate(total_amount=Sum("amount"))
+            .order_by("month")
         )
 
         serializer = TransactionAmountByMonthSerializer(
