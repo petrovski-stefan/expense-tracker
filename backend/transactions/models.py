@@ -12,7 +12,9 @@ TRANSACTION_CATEGORY_TYPES = TRANSACTION_TYPES
 
 
 class Transaction(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name="transactions"
+    )
     category = models.ForeignKey(
         to="Category",
         related_name="transactions",

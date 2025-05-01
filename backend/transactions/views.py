@@ -34,21 +34,14 @@ class TransactionCreateListView(APIView):
         from_date = request.query_params.get("fromDate", None)
         to_date = request.query_params.get("toDate", None)
 
-        all_transaction_qs = Transaction.objects.filter(user=request.user)  # type: ignore
+        all_filter_conditions = {"date__gte": from_date, "date__lte": to_date}
+        present_filter_conditions = {
+            key: value for key, value in all_filter_conditions.items() if value
+        }
 
-        if not from_date and not to_date:
-            serializer = TransactionOutputSerializer(all_transaction_qs, many=True)
-            return Response(
-                {"transactions": serializer.data}, status=status.HTTP_200_OK
-            )
+        transactions_qs = request.user.transactions.filter(**present_filter_conditions)  # type: ignore
+        serializer = TransactionOutputSerializer(transactions_qs, many=True)
 
-        if from_date:
-            filtered_qs = all_transaction_qs.filter(date__gt=from_date)
-
-        if to_date:
-            filtered_qs = all_transaction_qs.filter(date__lt=to_date)
-
-        serializer = TransactionOutputSerializer(filtered_qs, many=True)
         return Response({"transactions": serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
