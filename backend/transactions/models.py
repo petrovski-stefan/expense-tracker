@@ -39,7 +39,9 @@ class Transaction(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=50)
     type = models.CharField(choices=TRANSACTION_CATEGORY_TYPES, max_length=10)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name="categories"
+    )
 
     class Meta:
         # TODO: Think about this

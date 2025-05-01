@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
@@ -100,24 +101,16 @@ class CategoryCreateListView(APIView):
 
             return Response({"categories": serializer.data}, status=status.HTTP_200_OK)
 
-        top_categories = Category.objects.raw(
-            """
-        SELECT C.ID, C.NAME, SUM(T.amount) as total_amount 
-        FROM transactions_category as C 
-        INNER JOIN transactions_transaction AS T 
-        ON C.id = T.category_id 
-        WHERE T.user_id = %s  
-        GROUP BY C.id, C.name  
-        ORDER BY total_amount DESC 
-        """,
-            [request.user.id],  # type: ignore
+        # TODO: Top categories should be moved to a new endpoint
+        top_categories = (
+            request.user.categories.annotate(total_amount=Sum("transactions__amount"))  # type: ignore
+            .values("id", "name", "total_amount")
+            .filter(total_amount__gt=0)
+            .order_by("-total_amount")
         )
+        serializer = CategoryTotalSerializer(top_categories, many=True)  # type: ignore
 
-        top_categories_serializer = CategoryTotalSerializer(top_categories, many=True)
-
-        return Response(
-            {"categories": top_categories_serializer.data}, status=status.HTTP_200_OK
-        )
+        return Response({"categories": serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
 
