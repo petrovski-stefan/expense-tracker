@@ -93,23 +93,9 @@ class CategoryCreateListView(APIView):
 
     def get(self, request: Request) -> Response:
 
-        is_top_categories = request.query_params.get("topCategories", None)
+        categories_qs = request.user.categories.all()  # type: ignore
 
-        if not is_top_categories:
-            serializer = CategoryOutputSerializer(
-                Category.objects.filter(user=request.user), many=True  # type: ignore
-            )
-
-            return Response({"categories": serializer.data}, status=status.HTTP_200_OK)
-
-        # TODO: Top categories should be moved to a new endpoint
-        top_categories = (
-            request.user.categories.annotate(total_amount=Sum("transactions__amount"))  # type: ignore
-            .values("id", "name", "total_amount")
-            .filter(total_amount__gt=0)
-            .order_by("-total_amount")
-        )
-        serializer = CategoryTotalSerializer(top_categories, many=True)  # type: ignore
+        serializer = CategoryOutputSerializer(categories_qs, many=True)  # type: ignore
 
         return Response({"categories": serializer.data}, status=status.HTTP_200_OK)
 
@@ -124,6 +110,33 @@ class CategoryCreateListView(APIView):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CategorySummaryListView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+
+        limit = request.GET.get("limit")
+
+        try:
+            limit = int(limit)  # type: ignore
+        except (TypeError, ValueError):
+            limit = None
+
+        top_categories = (
+            request.user.categories.annotate(total_amount=Sum("transactions__amount"))  # type: ignore
+            .values("id", "name", "total_amount")
+            .filter(total_amount__gt=0)
+            .order_by("-total_amount")
+        )
+        if limit:
+            serializer = CategoryTotalSerializer(top_categories[:limit], many=True)  # type: ignore
+        else:
+            serializer = CategoryTotalSerializer(top_categories, many=True)  # type: ignore
+
+        return Response({"categories": serializer.data}, status=status.HTTP_200_OK)
 
 
 class CategoryDetailView(APIView):

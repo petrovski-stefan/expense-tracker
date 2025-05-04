@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
     CategoryCreateListView,
     CategoryDetailView,
+    CategorySummaryListView,
     TransactionAmountByMonth,
     TransactionCreateListView,
     TransactionDetailView,
@@ -37,6 +38,11 @@ urlpatterns = [
         "categories/",
         CategoryCreateListView.as_view(),
         name="categories",
+    ),
+    path(
+        "categories/summary/",
+        CategorySummaryListView.as_view(),
+        name="categories-summary",
     ),
     path(
         "categories/<int:pk>",

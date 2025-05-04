@@ -12,7 +12,7 @@ import {
   getAllTransactions,
   getTransactionAmountByMonth,
 } from '../../services/transaction-service';
-import { getAllCategories } from '../../services/category-service';
+import { getCategoriesSummary } from '../../services/category-service';
 import { Category } from '../../models/category-types';
 
 export type CategoryAmount = Category & { total_amount: number };
@@ -69,9 +69,8 @@ export const Dashboard = () => {
   useEffect(() => {
     const getTopCategories = async () => {
       try {
-        const response = (await getAllCategories(
-          authInfo.token,
-          'topCategories=true'
+        const response = (await getCategoriesSummary(
+          authInfo.token
         )) as AxiosResponse<TopCategories>;
 
         if (response.status === 200) {

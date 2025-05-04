@@ -14,10 +14,15 @@ type CreateCategoryRequest = {
 };
 
 export const getAllCategories = (
-  authToken: string,
-  queryParams: string = ''
+  authToken: string
 ): AxiosPromise<AllCategoriesResponse> | AxiosPromise => {
-  return axiosInstance.get(`${CATEGORY_BASE_PATH}?${queryParams}`, getAuthHeader(authToken));
+  return axiosInstance.get(`${CATEGORY_BASE_PATH}`, getAuthHeader(authToken));
+};
+
+export const getCategoriesSummary = (
+  authToken: string
+): AxiosPromise<AllCategoriesResponse> | AxiosPromise => {
+  return axiosInstance.get(`${CATEGORY_BASE_PATH}summary/`, getAuthHeader(authToken));
 };
 
 export const createCategory = (authToken: string, categoryData: CreateCategoryRequest) => {
