@@ -105,7 +105,11 @@ class TransactionInputSerializer(serializers.ModelSerializer):
 
 class TransactionAmountByMonthSerializer(serializers.Serializer):
     total_amount = serializers.FloatField(read_only=True)
-    month = serializers.CharField(read_only=True)
+    month = serializers.SerializerMethodField()
 
     class Meta:
         fields = ["total_amount", "month"]
+
+    def get_month(self, obj) -> str:
+        # Month is not None
+        return obj.get("month").strftime("%B %Y")
