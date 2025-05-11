@@ -154,12 +154,12 @@ class CategoryDetailView(APIView):
 class TransactionAmountByMonth(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    SIX_MONTHS_IN_DAYS = 30 * 6
 
     def get(self, request: Request) -> Response:
 
-        SIX_MONTHS_IN_DAYS = 30 * 6
         today = date.today()
-        six_months_before = today - timedelta(days=SIX_MONTHS_IN_DAYS)
+        six_months_before = today - timedelta(days=self.SIX_MONTHS_IN_DAYS)
 
         transactions_amount_by_month = (
             request.user.transactions.filter(date__gt=six_months_before)  # type: ignore
