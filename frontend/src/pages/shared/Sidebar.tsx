@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CurrentLoggedInUser } from './CurrentLoggedInUser';
-import useAuthContext from '../auth-context/use-auth-context';
+import useAuthContext from '../../auth-context/use-auth-context';
 
 const links = [
   { path: '/', name: 'DASHBOARD', needsAuth: true },

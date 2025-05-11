@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { CurrentLoggedInUser } from '../../shared-components/CurrentLoggedInUser';
+import { CurrentLoggedInUser } from '../shared/CurrentLoggedInUser';
 import { FilterableTransactionList } from './FilterableTransactionList';
 import { Transaction } from '../../models/transaction-types';
-import { TransactionModalForm } from '../../shared-components/TransactionModalForm';
+import { TransactionModalForm } from '../shared/TransactionModalForm';
 
 export const Transactions = () => {
   const [transactions, setTransactions] = useState<Array<Transaction>>([]);

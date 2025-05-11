@@ -1,11 +1,11 @@
-import { ReactNode, useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import { currencyContext } from './use-currency-context';
 
 const CURRENCIES = { USD: '$', GBP: '£', EUR: '€' };
 
 export type Currency = keyof typeof CURRENCIES;
 
-type CurrencyProviderProps = { children: ReactNode };
+type CurrencyProviderProps = PropsWithChildren;
 
 const CurrencyProvider = ({ children }: CurrencyProviderProps) => {
   const [currency, setCurrency] = useState<Currency>(() => {

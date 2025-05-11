@@ -12,6 +12,7 @@ export const TransactionItem = ({
   category,
   date,
   note,
+  type,
   handleDelete,
   handleUpdate,
 }: TransactionItemProps) => {
@@ -38,7 +39,7 @@ export const TransactionItem = ({
         <div className="flex flex-col gap-1 md:flex-row w-[25%] justify-around">
           <div className="bg-green-700 px-4 py-1 rounded-lg my-auto">
             <button
-              onClick={() => handleUpdate({ id, amount, category, date, note })}
+              onClick={() => handleUpdate({ id, amount, category, date, note, type })}
               className="text-white"
             >
               Edit

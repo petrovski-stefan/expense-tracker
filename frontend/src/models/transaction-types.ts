@@ -6,4 +6,5 @@ export type Transaction = {
   note: string;
   date: string;
   category: Category | null;
+  type: 'expense' | 'income';
 };
