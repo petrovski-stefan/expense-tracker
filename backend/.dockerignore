@@ -1,1 +1,7 @@
 db.sqlite3
+.env.template
+mypy.ini
+.gitignore
+.flake8
+.venv
+.mypy_cache

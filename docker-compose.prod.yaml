@@ -1,0 +1,47 @@
+services:
+  database:
+    container_name: et_database
+    image: postgres:alpine
+    ports:
+      - 5432:5432
+    env_file:
+      - backend/.env
+    volumes:
+      - et-db:/var/lib/postgresql/data
+
+  backend:
+    container_name: et_backend
+    build:
+      context: ./backend
+    ports:
+      - '8000:8000'
+    env_file:
+      - backend/.env
+    depends_on:
+      - database
+    volumes:
+      - et_static:/app/staticfiles/
+
+    command: >
+      sh -c "./wait_for_db.sh &&
+            python manage.py migrate &&
+            python manage.py superuser_seed &&
+            python manage.py collectstatic &&
+            gunicorn core.wsgi:application --bind 0.0.0.0:8000"
+
+  nginx:
+    container_name: et_nginx
+    build:
+      context: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - et_static:/app/staticfiles/:ro
+
+volumes:
+  et-db:
+  et_static:

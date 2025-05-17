@@ -6,3 +6,5 @@ mypy
 flake8
 django-cors-headers
 python-dotenv
+gunicorn==23.0.0
+psycopg[binary,pool]==3.2.9
