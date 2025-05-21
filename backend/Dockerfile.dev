@@ -1,0 +1,15 @@
+FROM python:3.12-alpine
+
+WORKDIR /app
+
+COPY requirements/dev.txt /app/requirements/
+
+RUN pip install -r requirements/dev.txt
+
+COPY . /app
+
+ENV DJANGO_SETTINGS_MODULE=core.settings.base
+
+RUN python manage.py migrate
+
+CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]

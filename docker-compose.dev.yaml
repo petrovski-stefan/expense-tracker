@@ -1,0 +1,15 @@
+services:
+  backend:
+    container_name: et_backend_dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - '8000:8000'
+    env_file:
+      - backend/.env
+    restart: always
+    volumes:
+      - ./backend:/app
+
+    # TODO: Add celery
