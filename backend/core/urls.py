@@ -22,4 +22,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("transactions.urls")),
     path("api/account/", include("users.urls")),
+    path("api/", include("celeryws.urls")),
 ]
