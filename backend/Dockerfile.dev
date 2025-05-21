@@ -2,9 +2,9 @@ FROM python:3.12-alpine
 
 WORKDIR /app
 
-COPY requirements/dev.txt /app
+COPY requirements/dev.txt /app/requirements/
 
-RUN pip install -r dev.txt
+RUN pip install -r requirements/dev.txt
 
 COPY . /app
 
