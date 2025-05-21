@@ -1,0 +1,6 @@
+{
+  "mypy-type-checker.cwd": "${workspaceFolder}/backend/",
+  "mypy-type-checker.args": ["--config-file=mypy.ini"],
+  "flake8.cwd": "${workspaceFolder}/backend/",
+  "flake8.args": ["--config=.flake8"]
+}
