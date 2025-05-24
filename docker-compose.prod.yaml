@@ -42,6 +42,26 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - et_static:/app/staticfiles/:ro
 
+  celery:
+    container_name: et_celery_dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    command: celery --app=core worker --loglevel=info --pool=prefork -c 2
+    env_file:
+      - backend/.env
+    volumes:
+      - ./backend:/app
+
+    depends_on:
+      - backend
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6397:6379'
+
 volumes:
   et-db:
   et_static:

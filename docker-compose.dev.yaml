@@ -11,5 +11,22 @@ services:
     restart: always
     volumes:
       - ./backend:/app
+  celery:
+    container_name: et_celery_dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    command: celery --app=core worker --loglevel=info --pool=prefork -c 2
+    env_file:
+      - backend/.env
+    volumes:
+      - ./backend:/app
 
-    # TODO: Add celery
+    depends_on:
+      - backend
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6397:6379'
