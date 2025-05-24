@@ -46,7 +46,7 @@ services:
     container_name: et_celery_dev
     build:
       context: ./backend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     command: celery --app=core worker --loglevel=info --pool=prefork -c 2
     env_file:
       - backend/.env
